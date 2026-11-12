@@ -1,6 +1,11 @@
 # -*- coding: utf-8 -*-
-from src.main import get_path_from_arguments, get_reader
+import sys
+from pathlib import Path
+
+from src.main import get_path_from_arguments, get_reader, main
 import pytest
+
+DATA_DIR = Path(__file__).parent.parent / "data"
 
 
 @pytest.fixture()
@@ -41,3 +46,21 @@ def test_get_reader_for_uppercase_extension() -> None:
 def test_get_reader_for_unknown_format() -> None:
     with pytest.raises(ValueError):
         get_reader("data/data.xml")
+
+
+def test_main_with_text_file(monkeypatch, capsys) -> None:
+    path = str(DATA_DIR / "data.txt")
+    monkeypatch.setattr(sys, "argv", ["main.py", "-p", path])
+    main()
+    output = capsys.readouterr().out
+    assert "Rating: " in output
+    assert "Students with debts:  0" in output
+
+
+def test_main_with_json_file(monkeypatch, capsys) -> None:
+    path = str(DATA_DIR / "data.json")
+    monkeypatch.setattr(sys, "argv", ["main.py", "-p", path])
+    main()
+    output = capsys.readouterr().out
+    assert "Rating: " in output
+    assert "Students with debts:  1" in output
