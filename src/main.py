@@ -2,6 +2,7 @@
 import argparse
 import sys
 
+from CalcDebts import CalcDebts
 from CalcRating import CalcRating
 from DataReader import DataReader
 from JsonDataReader import JsonDataReader
@@ -37,6 +38,9 @@ def main():
 
     rating = CalcRating(students).calc()
     print("Rating: ", rating)
+
+    debts = CalcDebts(students).calc()
+    print("Students with debts: ", debts)
 
 
 if __name__ == "__main__":
